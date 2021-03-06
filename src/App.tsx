@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Box, Paper } from "@material-ui/core";
+import { useStyle } from "./App.style";
+import { SignUp } from "./sign-up/SignUp";
+import { SignIn } from "./sign-in/SignIn";
+import { Kitties } from "./kitties/Kitties";
+import { Topbar } from "./topbar/Topbar";
+import { useAuth } from "./hooks/useAuth";
+import { isDefined } from "./utils/isDefined";
 
-function App() {
+export const App = () => {
+  const classes = useStyle();
+  const { signIn, signUp, user } = useAuth();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box className={classes.root} p={3}>
+      <Topbar />
+      {!isDefined(user) ? (
+        <>
+          <Paper className={classes.box}>
+            <SignUp onSubmit={signUp} />
+          </Paper>
+          <Paper className={classes.box}>
+            <SignIn onSubmit={signIn} />
+          </Paper>
+        </>
+      ) : (
+        <Paper className={classes.box}>
+          <Kitties />
+        </Paper>
+      )}
+    </Box>
   );
-}
-
-export default App;
+};
